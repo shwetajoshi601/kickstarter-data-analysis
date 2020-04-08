@@ -1,0 +1,179 @@
+<html>
+<head>
+    <title>Information Visualisation Project-1</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.9.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.2.1"></script>
+</head>
+<body>
+    <table style="width: 850px" cellspacing="5" cellpadding="5">
+    <tbody>
+    <tr>
+    <td style="width: 200px; vertical-align: top;"><strong>ANALYSIS:&nbsp;</strong></td>
+    <td style="vertical-align: top;"><strong>No. of Failed and Successful Projects by Hour of Day</strong></td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Dataset Description:</strong></td>
+    <td style="vertical-align: top;">
+    <p><a href="https://www.kaggle.com/kemical/kickstarter-projects" target="_blank" rel="noopener">KICKSTARTER DATA</a></p>
+    <p>The Kickstarter data is available on Kaggle and consists of data about Projects posted on the KickStarter Platform for crowd funding. Kickstarter is platform that allows people to share their creative ideas about new projects and gain funding for them. The dataset contains information about projects in various categories such as Film and Video, Technology, Craft, Dance, Games and Music etc. It also gives details about the success of the projects along with the funding received. Following is a short description of the main the fields: </p>
+	<ul>
+		<li><b>name:</b> Name of the Project</li>
+		<li><b>main_category:</b> A broad category to which the project belongs.</li>
+		<li><b>launched:</b> The date at which the project was launched on the platform.</li>
+		<li><b>deadline:</b> The date at which the project is/was expected to achieve the desired funding.</li>
+		<li><b>state:</b> Status of the project, whether it failed, passed or got cancelled.</li>
+		<li><b>backers:</b> No. of people that invested in the project.</li>
+		<li><b>usd_goal_real:</b> Amount to be achieved in USD.</li>
+		<li><b>usd_pledged_real:</b> Amount actually collected for the project in USD.</li>
+	</ul>
+	The dataset is quite large and contains about 3,80,000 records and about 15 features, hence, I have selected only specific features needed for analysis.
+	It is a clean dataset, however, pre-processing has been done where necessary to extract new features and/or remove existing features. (Described in section: Data Transformation).
+    </td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Initial Questions: </strong></td>
+    <td style="vertical-align: top;">
+	<ul>
+	<li>Does the time at which the project is launched have a role to play in its success?
+	<li>At which time of the day are most of the projects launched? What is the trend in their success and failure?</li>
+	</ul>
+	</td>
+    </tr>
+    </tbody>
+    </table>
+    <hr />
+  <div id="vis" class="container"></div>
+  <script type="text/javascript">
+    var yourVlSpec =  {
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "data": {
+        "url": "https://raw.githubusercontent.com/shwetajoshi601/infovis-data/master/vis2-data-new.csv",
+        "format": {
+            "type": "csv"
+        }
+    },
+    "transform": [
+        {
+            "filter": "datum.state=='failed' || datum.state=='successful'"
+        },
+        {
+            "filter": "datum.usd_goal_real>500 && datum.usd_goal_real < 1000000"
+        }
+    ],
+    "config": {
+        "axis": {
+            "labelFontSize": 11,
+            "titlePadding": 8,
+            "domainWidth": 1,
+            "titleFontSize": 13
+        },
+        "view": {
+            "stroke": "transparent"
+        }
+    },
+    "width": {
+        "step": 20
+    },
+    "height": 300,
+    "mark": "bar",
+    "title": {
+        "text": "No. of Failed and Successful projects by Hour of Day",
+        "anchor": "middle",
+        "fontSize": 18
+    },
+    "encoding": {
+        "column": {
+            "field": "launched",
+            "timeUnit": "hours",
+            "type": "ordinal",
+            "spacing": 10,
+            "title": "Hour of Day",
+            "sort": "ascending"
+        },
+        "x": {
+            "field": "state",
+            "type": "nominal",
+            "axis": {
+                "title": "Status"
+            }
+        },
+        "y": {
+            "field": "main_category",
+            "type": "quantitative",
+            "aggregate": "count",
+            "axis": {
+                "title": "No. of Projects"
+            }
+        },
+        "color": {
+            "field": "state",
+            "type": "nominal",
+            "scale": {
+                "range": [
+                    "#E74C3C",
+                    "#27AE60"
+                ]
+            },
+            "legend": {
+                "title": "Project Status",
+                "orient": "left",
+                "padding": 0,
+                "labelFontSize": 13,
+                "titleFontSize": 13
+            }
+        },
+        "tooltip": [{
+            "field": "main_category",
+            "type": "quantitative",
+            "aggregate": "count",
+            "title": "No. of Projects"
+        }]
+    }
+}
+        vegaEmbed("#vis", yourVlSpec);
+  </script>
+    <hr />
+<table style="width: 850px;" cellspacing="5" cellpadding="5">
+<tbody>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Description:&nbsp;</strong></td>
+<td style="vertical-align: top;">The plot above shows the total number of projects launched during each hour of the day starting at 00 hours (12 AM) to 23 hours (11 PM). It shows the number of successful and failed projects during each hour of the day.
+</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Insights:</strong></td>
+<td style="vertical-align: top;">
+From the graph, a very clear trend in the number of failed and successful projects across the hours in the day is visible. We can see that a large number of projects are launched in the early mornings, i.e. before 6 AM and in the evenings i.e after 5 PM as compared to the time between 6AM and 5PM. For every project launched on the platform, it is very important that it is noticed by the audience. If a project goes unnoticed, it may be deprived of potential backers thus resulting in less funding for the project. Hence, the time at which the project is launched is extremely important so that it appears in the "Fresh" section of the Kickstarter website when maximum people are actively checking the Kickstarter website. 6AM to 5PM are generally working hours for most of the people and the website traffic during these hours may be low. Hence most of the people prefer to launch their projects off working hours as it is evident from the graph. Maximum number of projects are launched after 6PM.
+<br><br>
+Another useful trend can be observed in the number of successful and failed projects. The ratio of successful projects deacreases over the day and gradually increases in the evening. In the morning time, projects launched at 6AM have a better ratio of success as compared to the other times. During the evening, the number of successful projects gets better. Maximum number of successful projects are launched at 6PM. After 6PM, it can be observed that the success rate goes on reducing and more than 50% of the projects launched during these hours fail. This may be because a large number of projects are launched during the same hours and there may be many factors affecting the success rate as well, launch hour being one of them. Since a large number of projects are launched in the same hours, there is more competition in terms of visibility of the project and the success rate slightly reduces. 
+Another striking observation is the ratio of successful and failed projects at 2PM and 3PM. There is very less difference in the number of failed and successful projects.
+
+<br><br>
+Thus, we can infer that, time of the day at which the project is launched affects the success of the project to a certain extent.
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Design Considerations:</strong></td>
+<td style="vertical-align: top;">I have used the Grouped Bar Chart for this visualisation because it makes it easy to visualise the trends across different categories among different groups of data. In this case, we had to visualise the trend across both success and failures across hours and also compare between successful and failed projects in each hour. I have used the time unit encoding to display the hour from the launch date to make it more readable. Color encoding has been used to distinctly visualise the two groups - successful and failed projects and make comparisons easier. I had considered a stacked bar chart as an alternative. It showed the total number of projects clearly and also the number of successful and failed projects. However, observing the trend between them across hours independently was difficult as compared to the grouped bar chart. Another option was a line chart. Although it clearly showed the trend across hours, The difference in the number successful and failed projects could not be identified clearly. Hence, a grouped bar chart seemed more appropriate.
+<br><br>
+If you hover over the bars, you will see the exact number of successful and failed projects for better clarity.
+The width of the chart has been adjusted to incorporate the trends across all the hours without cluttering the chart. Although it makes the chart wider, patterns are evidently visible.
+
+</td>
+</tr>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Data Filtering and Transformation:&nbsp;</strong></td>
+<td style="vertical-align: top;">The data consists of a number of fields, however, for this visualisation only a few features such as state, and launch date have been selected by truncating the rest of the features in Python. The launched column was parsed to extract the hour of the day from the date. usd_pledged_goal has been included to apply a filter.
+
+The following filters have been used:
+<ul>
+<li>Select only those projects which have status failed or successful, canceled, live, undefined and suspended projects have been excluded.</li>
+<li>Projects having a goal of greater than 500 USD and upto 1000000 USD have been considered to avoid outliers in the data.</li>
+<li>The count aggregation has been used to find the total number of projects launched in each hour.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

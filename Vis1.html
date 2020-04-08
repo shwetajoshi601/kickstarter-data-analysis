@@ -1,0 +1,261 @@
+<html>
+<head>
+    <title>Information Visualisation Project-1</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.9.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.2.1"></script>
+</head>
+<body>
+    <table style="width: 850px" cellspacing="5" cellpadding="5">
+    <tbody>
+    <tr>
+    <td style="width: 200px; vertical-align: top;"><strong>ANALYSIS:&nbsp;</strong></td>
+    <td style="vertical-align: top;"><strong>Analysing Failure and Success of Projects with respect to their Goal Amounts.</strong></td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Dataset Description:</strong></td>
+    <td style="vertical-align: top;">
+    <p><a href="https://www.kaggle.com/kemical/kickstarter-projects" target="_blank" rel="noopener">KICKSTARTER DATA</a></p>
+    <p>The Kickstarter dataset is available on Kaggle and consists of data about Projects posted on the KickStarter Platform for crowd funding. Kickstarter is a platform that allows people to share their creative ideas about new projects and gain funding for them. The dataset contains information about projects in various categories such as Film and Video, Technology, Craft, Dance, Games and Music etc. It also gives details about the success of the projects along with the funding received. Following is a short description of the main the fields: </p>
+	<ul>
+		<li><b>name:</b> Name of the Project</li>
+		<li><b>main_category:</b> A broad category to which the project belongs.</li>
+		<li><b>launched:</b> The date at which the project was launched on the platform.</li>
+		<li><b>deadline:</b> The date at which the project is/was expected to achieve the desired funding.</li>
+		<li><b>state:</b> Status of the project, whether it failed, was successful or got cancelled.</li>
+		<li><b>backers:</b> No. of people that invested in the project.</li>
+		<li><b>usd_goal_real:</b> Amount to be achieved in USD.</li>
+		<li><b>usd_pledged_real:</b> Amount actually collected for the project in USD.</li>
+	</ul>
+	The dataset is quite large and contains about 3,80,000 records and about 15 features, hence, I have selected only specific features needed for analysis.
+	It is a clean dataset, however, pre-processing has been done where necessary to extract new features and/or remove existing features. (Described in section: Data Transformation).
+    </td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Initial Questions: </strong></td>
+    <td style="vertical-align: top;">
+	<ul>
+	<li>Which are the categories that have the most number of campaigns/projects? What is the proportion of successful and failed projects in each category? <li>Which categories have more failures than successes?</li>
+	<li>What could be the reason for more failures? Does this relate in any way to the goal amount of the projects?</li>
+	</ul>
+	</td>
+    </tr>
+    </tbody>
+    </table>
+    <hr />
+  <div id="vis" class="container"></div>
+  <script type="text/javascript">
+    var yourVlSpec =  {
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "description": "A bar chart showing the US population distribution of age groups in 2000.",
+    "data": {
+        "url": "https://raw.githubusercontent.com/shwetajoshi601/infovis-data/master/vis1-data-new.csv"
+    },
+    "transform": [
+        {
+            "filter": "datum.usd_goal_real>500 && datum.usd_goal_real < 1000000"
+        },
+        {
+            "filter": "datum.state=='failed' || datum.state=='successful'"
+        }
+    ],
+    "hconcat": [
+        {
+            "mark": "bar",
+            "encoding": {
+                "y": {
+                    "field": "main_category",
+                    "type": "nominal",
+                    "sort": "-x",
+                    "axis": {
+                        "title": "Main Category",
+                        "tickColor": "skyblue"
+                    }
+                },
+                "x": {
+                    "field": "main_category",
+                    "type": "quantitative",
+                    "aggregate": "count",
+                    "axis": {
+                        "title": "No. of Projects"
+                    }
+                },
+                "color": {
+                    "field": "state",
+                    "type": "nominal",
+                    "scale": {
+                        "domain": [
+                            "failed",
+                            "successful"
+                        ],
+                        "scheme": "viridis"
+                    },
+                    "legend": {
+                        "orient": "left",
+                        "titleFontSize": 12,
+                        "labelFontSize": 12,
+                        "title": "Project Status"
+                    }
+                },
+                "tooltip": [
+                    {
+                        "field": "main_category",
+                        "type": "quantitative",
+                        "aggregate": "count",
+                        "title": "No. of Projects"
+                    }
+                ]
+            },
+            "title": {
+                "text": "Categorywise No. of Projects",
+                "anchor": "middle",
+                "fontSize": 18
+            },
+            "width": 400,
+            "height": 400
+        },
+        {
+            "layer": [
+                {
+                    "mark": {
+                        "opacity": 0.6,
+                        "type": "bar",
+                        "color": "#85C5A6"
+                    },
+                    "encoding": {
+                        "y": {
+                            "field": "main_category",
+                            "type": "nominal",
+                            "sort": {
+                                "field": "main_category",
+                                "op": "count",
+                                "order": "descending"
+                            }
+                        },
+                        "x": {
+                            "aggregate": "median",
+                            "field": "usd_pledged_real",
+                            "type": "quantitative",
+                            "axis": {
+                                "title": "Median Pledged Amount (USD)"
+                            }
+                        },
+                        "tooltip": [
+                            {
+                                "field": "usd_pledged_real",
+                                "aggregate": "median",
+                                "type": "quantitative",
+                                "title": "Median Pledged (USD)"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "mark": {
+                        "type": "rule",
+                        "point": true
+                    },
+                    "encoding": {
+                        "y": {
+                            "field": "main_category",
+                            "type": "nominal",
+                            "sort": {
+                                "field": "main_category",
+                                "op": "count",
+                                "order": "descending"
+                            },
+                            "axis": {
+                                "title": "Main Category"
+                            }
+                        },
+                        "x": {
+                            "aggregate": "median",
+                            "field": "usd_goal_real",
+                            "type": "quantitative",
+                            "axis": {
+                                "title": "Median Goal Amount (USD)"
+                            },
+                            "scale": {
+                                "domain": [
+                                    0,
+                                    22000
+                                ]
+                            }
+                        },
+                        "tooltip": [
+                            {
+                                "field": "usd_goal_real",
+                                "aggregate": "median",
+                                "type": "quantitative",
+                                "title": "Median Goal (USD)"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "width": 400,
+            "height": 400,
+            "title": {
+                "text": "Categorywise Median Goal vs Median Pledged amount",
+                "anchor": "middle",
+                "fontSize": 18
+            }
+        }
+    ],
+    "config": {
+        "axis": {
+            "labelFontSize": 12,
+            "titleFontSize": 14,
+            "titlePadding": 8
+        }
+    }
+}
+        vegaEmbed("#vis", yourVlSpec);
+  </script>
+    <hr />
+<table style="width: 850px;" cellspacing="5" cellpadding="5">
+<tbody>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Description:&nbsp;</strong></td>
+<td style="vertical-align: top;">The above chart consists of two plots:
+<ul>
+<li>The first plot shows the total number of projects in each category along with the number of succcessful and failed projects.</li>
+<li>The second plot shows the median goal amount and pledged amount for projects in each category to relate the number of failures to the median goal amount and pledged amount in each category. <strong>The bars indicate the median pledged amount and the lines indicate the median goal amount.</strong></li>
+</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Insights:</strong></td>
+<td style="vertical-align: top;"> It is evident from the plot that the category Film and Video has the most number of projects launched followed by Music category. Looking at the proportion of succcessful and failed projects, the categories Technology, Food, Fashion, Photography, Crafts and Journalism have more failures than successful projects. From these categories, the most striking numbers are for Technology which ranks 5th in the number of projects launched and has maximum failures. Dance, Music, Theatre and Comics categories have a higher number of successful projects than failed.
+
+<br><br>
+Looking at the second plot, these failures and successes can be clearly mapped to their median goal amounts. The light blue bars show the median pledged amount and the rules show the median goal amounts. For example, consider the Technology category. The median Goal Amount is way higher than its median Pledged amount and twice as the goal of the next highest cateory. Also, the median goal is the highest for this category as compared to all other categories. The same can be observed in the Food category where the median goal amount is very high. Thus, projects that have a relatively lower goal, tend to succeed since it is a natural tendency for people to invest in projects with smaller goals because smaller goals can be achieved sooner, increasing their chances of success. For other categories that have more failed projects than succesful projects, the difference between the median goal and the pledged amounts is very high. Consider the categories - Crafts, Journalism and Photography. Although these have lower median goals, the failure rate is higher. This is because these are unpopular categories and have a very small number of projects overall. On observing the categories, Dance, Theatre, Comics, and Music, it is evident that their median goals are relatively lower. Although they have a very low number of projects launched, they are unique categories and not very common. Hence, lower goals help them achieve higher sucess rate.
+
+<br><br>
+Thus, we can infer that, projects with a relatively lower goal tend to received more funding and hence tend to succeed. Also, launching a project in certain unique categories like Dance can also result in a success.
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Design Considerations:</strong></td>
+<td style="vertical-align: top;">For the first plot that shows the categorywise number of projects, I have used a stacked bar chart since it is an effective way of visualising the proportion of the total values based on some feature. In this case, I have used the color encoding to clearly reflect the number of projects in each group(successful, failed). The categories have been sorted based on the total number of projects to make it easy to identify the top categories. As an alternative, I had considered using a Layered Bar Chart instead each showing passed and failed projects in each category. Though it showed the numbers, some of the bars were being overlapped making it difficult to make comparisons. Hence, stacked bar chart was the best option. Tooltip has been added to visualise the exact value.
+
+<br><br>
+For the second plot showing the median goal and pledged amounts for each category, I have used a layered bar plot. The goal and pledged amount on Kickstarter varies from as low as USD 0.1 to thousands of USD. Hence, I have considered the median of the goal and pledged amounts. I have used the rule mark over the bar mark in order to clearly show the difference in the median goal and median pledged amounts. Another option was a dual axis bar plot for goal and pledged amounts. But the plot was confusing and careful attention had to be paid to the scale which made reading and understanding the plot very difficult. In addition, since the unit for the goal and pledged was the same, it was better to use a single axis plot to avoid confusion.In case of an overlapping bar chart, smaller values were hidden by longer bars and made it diffcult to understand. Hence, a rule was used used instead of the bar encoding for the next layer. I also tried multi-line charts but comparison could not be done easily since there is no trend across categories. The chart has been sorted in the same order as the first plot to make comparison easy between the two. I have added tooltips to visualise the actual values making the chart more readable.
+
+<br>
+I have used horizontal concatenation in order to make comparison easy instead of vertical concatenation for the two plots.
+</td>
+</tr>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Data Filtering and Transformation:&nbsp;</strong></td>
+<td style="vertical-align: top;">The data consists of a number of fields, however, for this visualisation only a few features such as main_category, state, usd_goal_real and usd_pledged_real have been selected by truncating the rest of the features in Python.
+The following filters have been used:
+<ul>
+<li>Select only those projects which have status failed or successful; canceled, live, undefined and suspended projects have been excluded.</li>
+<li>Projects having a goal of greater than 500 USD and upto 1000000 USD have been considered to avoid outliers in the data.</li>
+<li>Median aggregation has been used for usd_goal_real and usd_pleged_real fields</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

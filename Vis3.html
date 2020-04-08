@@ -1,0 +1,196 @@
+<html>
+<head>
+    <title>Information Visualisation Project-1</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.9.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.2.1"></script>
+</head>
+<body>
+    <table style="width: 850px" cellspacing="5" cellpadding="5">
+    <tbody>
+    <tr>
+    <td style="width: 200px; vertical-align: top;"><strong>ANALYSIS:&nbsp;</strong></td>
+    <td style="vertical-align: top;"><strong>Trend in the success rate of Projects and their relationship with No. of Backers over the years.</strong></td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Dataset Description:</strong></td>
+    <td style="vertical-align: top;">
+    <p><a href="https://www.kaggle.com/kemical/kickstarter-projects" target="_blank" rel="noopener">KICKSTARTER DATA</a></p>
+    <p>The Kickstarter data is available on Kaggle and consists of data about Projects posted on the KickStarter Platform for crowd funding upto early 2018. Kickstarter is platform that allows people to share their creative ideas about new projects and gain funding for them. The dataset contains information about projects in various categories such as Film and Video, Technology, Craft, Dance, Games and Music etc. It also gives details about the success of the projects along with the funding received. Following is a short description of the main the fields: </p>
+	<ul>
+		<li><b>name:</b> Name of the Project</li>
+		<li><b>main_category:</b> A broad category to which the project belongs.</li>
+		<li><b>launched:</b> The date at which the project was launched on the platform.</li>
+		<li><b>deadline:</b> The date at which the project is/was expected to achieve the desired funding.</li>
+		<li><b>state:</b> Status of the project, whether it failed, passed or got cancelled.</li>
+		<li><b>backers:</b> No. of people that invested in the project.</li>
+		<li><b>usd_goal_real:</b> Amount to be achieved in USD.</li>
+		<li><b>usd_pledged_real:</b> Amount actually collected for the project in USD.</li>
+	</ul>
+	The dataset is quite large and contains about 3,80,000 records and about 15 features, hence, I have selected only specific features needed for analysis.
+	It is a clean dataset, however, pre-processing has been done where necessary to extract new features and/or remove existing features. (Described in section: Data Transformation).
+    </td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Initial Questions: </strong></td>
+    <td style="vertical-align: top;">
+	<ul>
+	<li>How has the success rate of the projects on Kickstarter been over years?
+	<li>Is there any relation between the success rate and number of backers over the years? Has the number of backers affected the success rate?</li>
+	</ul>
+	</td>
+    </tr>
+    </tbody>
+    </table>
+    <hr />
+  <div id="vis" class="container"></div>
+  <script type="text/javascript">
+    var yourVlSpec =  {
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "data": {
+        "url": "https://raw.githubusercontent.com/shwetajoshi601/infovis-data/master/vis3-data-new.csv",
+        "format": {
+            "type": "csv"
+        }
+    },
+    "transform": [
+        {
+            "filter": "datum.year > 2008 && datum.year<2018"
+        }
+    ],
+    "config": {
+        "axis": {
+            "labelFontSize": 14,
+            "titleFontSize": 16,
+            "titlePadding": 8
+        }
+    },
+    "width": 500,
+    "height": 400,
+    "title": {
+        "text": "Relationship between Success Percentage and Avg. No. of Backers",
+        "anchor": "middle",
+        "fontSize": 18
+    },
+    "encoding": {
+        "x": {
+            "field": "year",
+            "axis": {
+                "title": "Year",
+                "labelAngle": 30
+            },
+            "type": "nominal"
+        }
+    },
+    "layer": [
+        {
+            "mark": {
+                "type": "line",
+                "color": "#EDA81F",
+                "point": {
+                    "color": "sandybrown"
+                }
+            },
+            "encoding": {
+                "y": {
+                    "field": "success_rate",
+                    "type": "quantitative",
+                    "axis": {
+                        "title": "Successful Projects (in %)",
+                        "titleColor": "#EDA81F"
+                    }
+                },
+                "tooltip": [{
+                    "field": "success_rate",
+                    "type": "quantitative",
+                    "title": "Success Percent"
+                }, {
+                    "field": "year",
+                    "type": "nominal",
+                    "title": "Year"
+                }]
+            }
+        },
+        {
+            "mark": {
+                "stroke": "#BB8FCE",
+                "type": "line",
+                "point": {
+                    "color": "darkviolet"
+                }
+            },
+            "encoding": {
+                "y": {
+                    "field": "avg_backers",
+                    "type": "quantitative",
+                    "axis": {
+                        "title": "Avg. No. of Backers",
+                        "titleColor": "#BB8FCE"
+                    }
+                },
+                "tooltip": [{
+                    "field": "avg_backers",
+                    "type": "quantitative",
+                    "title": "Avg Backers"
+                }, {
+                    "field": "year",
+                    "type": "nominal",
+                    "title": "Year"
+                }]
+            }
+        }
+    ],
+    "resolve": {
+        "scale": {
+            "y": "independent"
+        }
+    }
+}
+        vegaEmbed("#vis", yourVlSpec);
+  </script>
+    <hr />
+<table style="width: 850px;" cellspacing="5" cellpadding="5">
+<tbody>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Description:&nbsp;</strong></td>
+<td style="vertical-align: top;">The above plot shows two lines for finding the relation between the success rate and the number of backers over the years for all the projects in all categories.
+<li> Overall percentage of successful projects over the years since the time Kickstarter was started. (orange line)
+<li> Average number of backers over the years. (purple line)
+
+</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Insights:</strong></td>
+<td style="vertical-align: top;"> From the plot, we can see that in the initial years the success percentage was extremely high and the number of backers was very low. This may be due to the fact that, Kickstarter was launched in the year 2009 and in the initial years, the platform was not that popular since there was less awareness regarding crowd-funding in general and crowd funding platforms. Crowd funding itself had a boost in the year 2009. So, even with a few number of backers, the success rate may have been high since there may have been smaller number of projects initially. According to the Kickstarter website, just 3 weeks after kickstarter was started, 2-3 major projects with high goals (USD 50,000) had been successful. Hence the good percentage in the success rate despite less number of backers.
+<br><br>
+Gradually over the years upto 2013 the success percentage seems to be constant with minor spikes, however, the average number of backers increases significantly from 20 to 140 between 2009 and 2013. This clearly means that Kickstarter had gained enough visibility and had more participation over the years and more people has started investing in projects. The year 2013 marks the highest success rate along with the highest number of backers which means that the more the people invested in projects, the more the success rate. Thereafter the success rate has been proportional to the number of backers.
+<br><br>
+The year 2014 shows a sudden dip both in the success percentage and the number of backers. This is clear since in 2014 Kickstarter had about 282 copyright infringement cases on the project ideas that were launched, out of which 44% proved to be true and action was taken against them (Mentioned in the Kickstarter transparency report of 2014). This may have resulted in people losing interest in the platform and the projects launched through it.  
+<br><br>
+Overall, we can say that as the number of backers increases, as more and more people invest in projects, the success rate increases. However, this may get affected due to certain events that affect the investment and the projects.
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Design Considerations:</strong></td>
+<td style="vertical-align: top;"> I have used a layered dual axis line plot for visualising the success rate and the average number of backers. Since the two parameters had to be compared over the years, a line plot was my first choice as it efficiently shows the trend over time. I have used a dual axis plot because the two features - Success percentage and Avg. backers have different scales and units. Combining the two on a single axis would have made the chart unnecessarily long, left too much unused space on the chart and comparing exact values for each year would have been difficult.
+<br><br>
+I had considered a layered chart with a bar and line mark for the two parameters. The layered bar and line chart did show the trend over time, however, the correlation between the trends of the two parameters was better reflected with line charts having markers on them. Also, the bars occupied most of the space on the chart leaving the line unnoticed. I adjusted opacity of the bars to check the effect, however, the dual axis layered line chart was still better while comparing values.
+<br><br>
+The two lines have been color coded in distinct colors that make the chart appealing. Markers have been added to highlight the exact values in the corresponding year. I have used tooltips to show the exact values. The axis labels have been colored with the same color as that of the line to make it easy to identify which parameter each line represents. The X axis labels have been rotated to enhance readability.
+
+</td>
+</tr>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Data Filtering and Transformation:&nbsp;</strong></td>
+<td style="vertical-align: top;">In order to get the Success percentage and the average number of backers, I have processed the data in Python and formed two new fields avg_backers and success_rate from the fields backers and state from the original data. The data was grouped by year and the percentage and average was taken for each year. The new values were stored in a CSV file.
+
+The following filters have been used:
+<ul>
+<li>The data contains an outlier - Year 1970. Kickstarter was launched in 2009 hence including this year in the visualisation was futile. A filter has been added to only include years after 2008.</li>
+<li>The data consists of information only upto early 2018. Hence the success percentage for the year 2018 is 0. This value has been excluded by using a filter for year < 2018 </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
