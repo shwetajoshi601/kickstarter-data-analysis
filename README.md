@@ -8,6 +8,30 @@ In this project, we have created three distinct visualisations for analysing the
 * Vega-Lite has been used to create visualisations and the JSON spec has been embedded into HTML files.
 * The HTML files for the 3 analyses consist of the details of the dataset description, the visualisations and insights obtained from the analysis.
 
+## Steps to view the Analysis
+
+Assuming you have GIT Bash already installed, or any other tool to interact with GitHub,
+
+1. Clone the project folder
+
+   ```
+      git clone https://github.com/shwetajoshi601/kickstarter-data-analysis.git
+   ```   
+2. Change directory
+   ``` 
+      cd kickstarter-data-analysis
+   ```
+3. Run the HTML
+
+      ```
+      Double click on any HTML file. It will open in the browser.
+      ```
+      
+   Example:
+   
+      ![sample](https://user-images.githubusercontent.com/16982762/78817480-1a03cc80-79cb-11ea-9859-acebba0ef25d.PNG)
+    
+
 ## Analysing how Project goal amount affects the success
 
 * In this visualisation, we try to find a relation between the success/failure of a project to the goal amount the projects have.
